@@ -5,9 +5,9 @@ import time
 MESSAGES = []
 
 def Obfuscate(msg):
-    if random.getrandbits(1)):
+    if random.getrandbits(1):
         msg = msg.replace('о', 'o')
-    if random.getrandbits(1)):
+    if random.getrandbits(1):
         msg = msg.replace('е', 'e')
     
     return msg
