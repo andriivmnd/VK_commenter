@@ -15,6 +15,10 @@ def Obfuscate(msg):
 def GetMessage():
     return Obfuscate(random.choice(MESSAGES))
 
+def GetLinks(file):
+    with open(file) as links:
+        return links.read().split()
+
 def LinkToID(link):
     return link.split("wall")[-1].split('_')
 
@@ -42,6 +46,30 @@ def SolveCaptcha(c):
     return c.try_again(key)
 
 def main():
-    ...
+    print("VK Commenter\n")
+    links = GetLinks("links.txt")
+    login = input("Login: ")
+    password = input("Password: ")
+
+    session = vk_api.VkApi(token=GetToken(login, password))
+    vk = session.get_api()
+
+    print("[?] Login successful")
+
+    for link in links:
+        ids = LinkToID(link)
+        try:
+            status = vk.wall.createComment(owner_id=ids[0], post_id=ids[1], message=message)
+        except Exception as e:
+            if "parent deleted" in str(e).lower(): print(f"[-][{link}]", e)
+            elif "captcha" in str(e).lower():
+                print("[!] Captcha needed")
+                exit()
+            else:
+                print("[!] Unknown error:", e)
+                print(ids)
+                exit()
+        else:
+            print("[+] Posted on", link)
 
 if __name__ == "__main__": main()
