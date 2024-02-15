@@ -2,8 +2,9 @@ import vk_api
 import random
 import time
 
-MESSAGES = []
+MESSAGES = [] # Messages to post
 
+# Change cyrillic characters to latin to avoid detection in VK
 def Obfuscate(msg):
     if random.getrandbits(1):
         msg = msg.replace('о', 'o')
@@ -12,17 +13,20 @@ def Obfuscate(msg):
     
     return msg
 
+# Get random message
 def GetMessage():
     return Obfuscate(random.choice(MESSAGES))
 
+# Get list of target links to post on
 def GetLinks(file):
     with open(file) as links:
         return links.read().split()
 
+# Convert link to post to ID
 def LinkToID(link):
     return link.split("wall")[-1].split('_')
 
-# Deprecated
+# Deprecated (used to get token by login/password)
 def GetToken(login, password):
     vk = vk_api.VkApi(login, password)
     vk.auth()
@@ -41,6 +45,7 @@ def GetToken(login, password):
     
     return accessToken
 
+# Captcha solver
 def SolveCaptcha(c):
     print("[!] Captcha needed:", c.get_url())
     key = input("[>] Please enter the code: ")
@@ -65,7 +70,7 @@ def main():
     for link in links:
         ids = LinkToID(link)
         try:
-            status = vk.wall.createComment(owner_id=ids[0], post_id=ids[1], message=message)
+            status = vk.wall.createComment(owner_id=ids[0], post_id=ids[1], message=GetMessage())
         except Exception as e:
             if "parent deleted" in str(e).lower(): print(f"[-][{link}]", e)
             elif "captcha" in str(e).lower():
