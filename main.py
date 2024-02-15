@@ -22,6 +22,7 @@ def GetLinks(file):
 def LinkToID(link):
     return link.split("wall")[-1].split('_')
 
+# Deprecated
 def GetToken(login, password):
     vk = vk_api.VkApi(login, password)
     vk.auth()
@@ -51,8 +52,13 @@ def main():
     login = input("Login: ")
     password = input("Password: ")
 
-    session = vk_api.VkApi(token=GetToken(login, password))
-    vk = session.get_api()
+    # session = vk_api.VkApi(token=GetToken(login, password))
+    # vk = session.get_api()
+
+    vk_session = vk_api.VkApi(login, password)
+    vk_session.auth()
+
+    vk = vk_session.get_api()
 
     print("[?] Login successful")
 
