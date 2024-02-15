@@ -60,7 +60,7 @@ def main():
     # session = vk_api.VkApi(token=GetToken(login, password))
     # vk = session.get_api()
 
-    vk_session = vk_api.VkApi(login, password)
+    vk_session = vk_api.VkApi(login=login, password=password, app_id=6121396)
     vk_session.auth()
 
     vk = vk_session.get_api()
